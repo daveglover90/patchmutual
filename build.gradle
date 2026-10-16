@@ -31,7 +31,17 @@ dependencies {
 		'org.glassfish.jersey.containers:jersey-container-servlet:2.27',
 		'org.glassfish.jersey.inject:jersey-hk2:2.27',
 		'log4j:log4j:1.2.16',
-		'org.apache.wink:wink-json4j:1.4'
+		'org.apache.wink:wink-json4j:1.4',
+		// --- Snyk Open Source (SCA) demo dependencies ---
+		// Intentionally outdated, well-known-vulnerable libraries so `snyk test`
+		// surfaces recognizable, high/critical CVEs. These are declared but not
+		// imported anywhere, so they do not affect compilation or app behavior.
+		'org.apache.logging.log4j:log4j-core:2.14.1',   // CVE-2021-44228 (Log4Shell)
+		'org.apache.logging.log4j:log4j-api:2.14.1',
+		'com.fasterxml.jackson.core:jackson-databind:2.9.10.1', // multiple deserialization CVEs
+		'org.yaml:snakeyaml:1.30',                      // CVE-2022-1471
+		'commons-collections:commons-collections:3.2.1', // CVE-2015-6420 (deserialization RCE)
+		'com.google.guava:guava:24.1.1-jre'             // CVE-2018-10237, CVE-2020-8908
 	providedCompile \
 		'javax:javaee-api:7.0'
 }

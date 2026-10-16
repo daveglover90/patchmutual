@@ -1,0 +1,28 @@
+# ⚠️ INTENTIONALLY VULNERABLE IMAGE — for Snyk Container demo only. Do not run in production.
+#
+# Build:  docker build -t patchmutual-vuln -f containers/Dockerfile.vulnerable containers
+# Scan:   snyk container test patchmutual-vuln --file=containers/Dockerfile.vulnerable
+#
+# An old base image gives a long, credible OS-package vuln list; running as root and
+# adding outdated app packages adds more. The base-image upgrade advice from Snyk is a
+# good "remediation" talking point.
+
+FROM node:14-buster
+
+# Outdated OS packages (many Debian buster CVEs) + a couple of known-vulnerable tools
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      curl=7.64.0-4+deb10u1 \
+      git \
+      openssl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Pin deliberately vulnerable npm packages so the app layer has findings too
+RUN npm install lodash@4.17.11 minimist@1.2.0 axios@0.18.0 jsonwebtoken@8.3.0
+
+COPY . /app
+
+# Runs as root (no USER directive) — flagged by Snyk container best-practices
+EXPOSE 3000
+CMD ["node", "-e", "console.log('patchmutual vulnerable container demo')"]

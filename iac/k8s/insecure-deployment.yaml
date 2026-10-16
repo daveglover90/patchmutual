@@ -1,0 +1,49 @@
+# ⚠️ INTENTIONALLY INSECURE KUBERNETES MANIFEST — for Snyk IaC demo only. Do not deploy.
+# Complements k8s-src/privilegedDeployment.yaml with a second, cleaner set of findings.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: patchmutual-web
+  labels:
+    app: patchmutual-web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: patchmutual-web
+  template:
+    metadata:
+      labels:
+        app: patchmutual-web
+    spec:
+      containers:
+        - name: web
+          image: patchmutual/web:latest   # mutable 'latest' tag
+          ports:
+            - containerPort: 8080
+          securityContext:
+            runAsNonRoot: false            # runs as root
+            runAsUser: 0
+            privileged: true               # privileged container
+            allowPrivilegeEscalation: true # privilege escalation allowed
+            readOnlyRootFilesystem: false
+            capabilities:
+              add:
+                - NET_ADMIN
+                - SYS_ADMIN
+          # no resource requests/limits set -> noisy-neighbor / DoS risk
+          env:
+            - name: DB_PASSWORD
+              value: "Password123!"        # hardcoded secret in manifest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: patchmutual-web
+spec:
+  type: LoadBalancer
+  selector:
+    app: patchmutual-web
+  ports:
+    - port: 80
+      targetPort: 8080
