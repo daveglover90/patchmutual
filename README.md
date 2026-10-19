@@ -1,3 +1,13 @@
+# Snyk multi-product demo
+
+This fork extends AltoroJ into a **single repo that demos across the whole Snyk platform** —
+Code (SAST), DAST, Open Source (SCA), IaC, Container, and AI (AI-BOM + Agent Scan).
+See **[`SNYK-DEMO.md`](SNYK-DEMO.md)** for the run guide and **[`SECURITY-DEMO.md`](SECURITY-DEMO.md)**
+for what's intentionally unsafe (and why it's safe to scan). Added material lives in
+`build.gradle` (SCA), `iac/` (IaC), `containers/` (Container), and `ai/` + `.claude/skills/` (AI).
+
+---
+
 # Description
 WARNING: This application contains security vulnerabilities. Run it only in a backed-up and sheltered environment (such as a VM with a recent snapshot and host-only networking) and at your own risk, escpecially if you enable some of the advanced options described below!
 
